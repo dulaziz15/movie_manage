@@ -1,7 +1,6 @@
-import { AuthLoginDto } from './../auth/dto/auth-login.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Body } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
@@ -25,11 +24,32 @@ export class UsersService {
     return user;
   }
 
-  async getAll() {
-    const user = await this.userRepository.find();
+  async getAll(id: number) {
+    const user = await this.userRepository.findOne({ where: { id: id } });
     return {
-      message: 200,
-      status: 'success',
+      status: 200,
+      message: 'success',
+      data: user,
+    };
+  }
+
+  async update(@Body() updateUserDto: UpdateUserDto, id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: id },
+    });
+
+    user.name = updateUserDto.name;
+    user.email = updateUserDto.email;
+    user.password = updateUserDto.password;
+    user.avatar = updateUserDto.avatar;
+    user.is_admin = updateUserDto.is_admin;
+    user.updated_at = new Date();
+
+    await this.userRepository.save(user);
+
+    return {
+      status: 200,
+      message: 'updated successfully',
       data: user,
     };
   }

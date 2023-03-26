@@ -1,26 +1,77 @@
-import { Injectable } from '@nestjs/common';
+import { Studio } from './entities/studio.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStudioDto } from './dto/create-studio.dto';
 import { UpdateStudioDto } from './dto/update-studio.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class StudiosService {
-  create(createStudioDto: CreateStudioDto) {
-    return 'This action adds a new studio';
+  constructor(
+    @InjectRepository(Studio)
+    private studioRepository: Repository<Studio>,
+  ) {}
+
+  async create(createStudioDto: CreateStudioDto) {
+    const data = await this.studioRepository.save(createStudioDto);
+    return {
+      status: 201,
+      message: 'success create data',
+      data: data,
+    };
   }
 
-  findAll() {
-    return `This action returns all studios`;
+  async findAll() {
+    const data = await this.studioRepository.find();
+    if (data.length === 0) {
+      throw new NotFoundException();
+    }
+    return {
+      status: 200,
+      message: 'success get data',
+      data: data,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} studio`;
+  async findOne(id: number) {
+    const data = await this.studioRepository.findOne({ where: { id: id } });
+    if (!data) {
+      throw new NotFoundException();
+    }
+    return {
+      status: 200,
+      message: 'success get data',
+      data: data,
+    };
   }
 
-  update(id: number, updateStudioDto: UpdateStudioDto) {
-    return `This action updates a #${id} studio`;
+  async update(id: number, updateStudioDto: UpdateStudioDto) {
+    const data = await this.studioRepository.findOne({ where: { id: id } });
+    if (!data) {
+      throw new NotFoundException();
+    }
+    data.studio_number = updateStudioDto.studio_number;
+    data.seat_capacity = updateStudioDto.seat_capacity;
+    data.updated_at = new Date();
+    await this.studioRepository.save(data);
+    return {
+      status: 200,
+      message: 'success update data',
+      data: data,
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} studio`;
+  async remove(id: number) {
+    const data = await this.studioRepository.findOne({ where: { id: id } });
+    if (!data) {
+      throw new NotFoundException();
+    }
+    data.deleted_at = new Date();
+    const datas = await this.studioRepository.remove(data);
+    return {
+      status: 200,
+      message: 'success remove data',
+      data: datas,
+    };
   }
 }

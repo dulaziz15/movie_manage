@@ -1,3 +1,4 @@
+import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { AuthLoginDto } from './../auth/dto/auth-login.dto';
@@ -8,11 +9,12 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from 'src/auth/auth.service';
+import path from 'path';
 
 @Controller('users')
 export class UsersController {
@@ -26,8 +28,17 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  getAll() {
-    return this.usersService.getAll();
+  getAll(@Req() req) {
+    const id = req.user.userId;
+    return this.usersService.getAll(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  update(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+    const id = req.user.userId;
+    return this.usersService.update(updateUserDto, id);
   }
 }
