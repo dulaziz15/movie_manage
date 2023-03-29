@@ -74,4 +74,14 @@ export class StudiosService {
       data: datas,
     };
   }
+
+  async findStudio(studioId: number) {
+    const data = await this.studioRepository.findOne({
+      where: { id: studioId },
+    });
+    if (!data) {
+      throw new NotFoundException();
+    }
+    return data;
+  }
 }

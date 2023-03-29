@@ -32,19 +32,19 @@ export class TagsController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.tagsService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto) {
+  update(@Param('id') id: number, @Body() updateTagDto: UpdateTagDto) {
     return this.tagsService.update(+id, updateTagDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.tagsService.remove(+id);
   }
 }

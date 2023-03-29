@@ -90,4 +90,14 @@ export class OrdersService {
       data: data,
     };
   }
+
+  async findOrder(orderId: number) {
+    const data = await this.orderRepository.findOne({
+      where: { id: orderId },
+    });
+    if (!data) {
+      throw new NotFoundException();
+    }
+    return data;
+  }
 }

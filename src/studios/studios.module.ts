@@ -8,5 +8,6 @@ import { StudiosController } from './studios.controller';
   imports: [TypeOrmModule.forFeature([Studio])],
   controllers: [StudiosController],
   providers: [StudiosService],
+  exports: [StudiosService],
 })
 export class StudiosModule {}

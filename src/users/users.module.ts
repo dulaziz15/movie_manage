@@ -9,7 +9,7 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), MoviesService],
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService, JwtService, AuthService],
   exports: [UsersService],
