@@ -14,5 +14,6 @@ import { MovieschedulesModule } from 'src/movieschedules/movieschedules.module';
   ],
   controllers: [OrderitemsController],
   providers: [OrderitemsService],
+  exports: [OrderitemsService],
 })
 export class OrderitemsModule {}

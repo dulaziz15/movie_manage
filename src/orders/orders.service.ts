@@ -1,3 +1,6 @@
+import { SingleOrderDto } from './dto/response/single-order.dto';
+import { UsersService } from './../users/users.service';
+import { OrderitemsService } from './../orderitems/orderitems.service';
 import { User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,7 +14,8 @@ export class OrdersService {
   constructor(
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
-  ) {}
+    private usersService: UsersService,
+  ) { }
 
   async create(createOrderDto: CreateOrderDto, id: User) {
     const data = await this.orderRepository.create(createOrderDto);
@@ -25,11 +29,13 @@ export class OrdersService {
   }
 
   async findAll(id: number) {
-    const data = await this.orderRepository.find({
-      where: {
-        user: { id: id },
-      },
-    });
+    const data = await this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.orderItems', 'orderitem')
+      .leftJoinAndSelect('orderitem.movie_schedule', 'movieschedule')
+      .leftJoinAndSelect('movieschedule.movie', 'movie')
+      .leftJoinAndSelect('movieschedule.studio', 'studio')
+      .getMany();
 
     if (data.length === 0) {
       throw new NotFoundException();
@@ -43,9 +49,9 @@ export class OrdersService {
   }
 
   async findOne(id: number, id_user: number) {
-    const data = await this.orderRepository.findOne({
-      where: { id: id, user: { id: id_user } },
-    });
+    const data = await this.orderRepository
+      .createQueryBuilder('order')
+      .getMany();
 
     if (!data) {
       throw new NotFoundException();

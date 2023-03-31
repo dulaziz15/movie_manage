@@ -73,4 +73,8 @@ export class OrderitemsService {
   remove(id: number) {
     return `This action removes a #${id} orderitem`;
   }
+
+  async cari(id: number) {
+    console.log(id);
+  }
 }
