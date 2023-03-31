@@ -13,7 +13,7 @@ export class OrdersService {
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
     private usersService: UsersService,
-  ) {}
+  ) { }
 
   async create(createOrderDto: CreateOrderDto, id: User) {
     const data = await this.orderRepository.create(createOrderDto);
@@ -33,7 +33,7 @@ export class OrdersService {
       .leftJoinAndSelect('orderitem.movie_schedule', 'movieschedule')
       .leftJoinAndSelect('movieschedule.movie', 'movie')
       .leftJoinAndSelect('movieschedule.studio', 'studio')
-      .where({ user: id })
+      .where({ user: { id: id } })
       .getMany();
 
     if (data.length === 0) {
@@ -50,8 +50,8 @@ export class OrdersService {
   async findOne(id: number, id_user: number) {
     const data = await this.orderRepository
       .createQueryBuilder('order')
-      .where({ id: id })
-      .andWhere({ user: id_user })
+      .where({ user: { id: id_user } })
+      .andWhere({ id: id })
       .getOne();
 
     if (!data) {
