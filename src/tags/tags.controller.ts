@@ -1,4 +1,3 @@
-import { Tag } from './entities/tag.entity';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import {
   Controller,

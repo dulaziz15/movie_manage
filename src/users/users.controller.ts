@@ -1,20 +1,17 @@
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from './../auth/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
-import { AuthLoginDto } from './../auth/dto/auth-login.dto';
 import {
   Controller,
   Get,
   Post,
   Body,
   Patch,
-  Param,
   UseGuards,
   Req,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from 'src/auth/auth.service';
-import path from 'path';
 
 @Controller('users')
 export class UsersController {
